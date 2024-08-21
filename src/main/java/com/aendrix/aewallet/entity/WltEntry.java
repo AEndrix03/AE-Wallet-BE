@@ -3,13 +3,13 @@ package com.aendrix.aewallet.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "entry")
-public class Entry {
+@Table(name = "wlt_entry")
+public class WltEntry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,9 +26,9 @@ public class Entry {
     private String description;
 
     @Column(name = "date")
-    private LocalDate date;
+    private LocalDateTime date;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "wallet")
-    private Wallet wallet;
+    @JoinColumn(name = "id_wallet")
+    private WltWallet wallet;
 }

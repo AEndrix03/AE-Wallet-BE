@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
-@Table(name = "wallet")
+@Table(name = "wlt_wallet")
 @Entity
-public class Wallet {
+public class WltWallet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +20,6 @@ public class Wallet {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user")
-    private User user;
+    @JoinColumn(name = "id_user")
+    private WltUser wltUser;
 }

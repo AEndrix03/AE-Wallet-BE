@@ -8,26 +8,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class UserController {
-
-    private final String ROOT = "users";
+@RequestMapping("/api/auth")
+public class AuthController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping(ROOT)
+    @GetMapping()
     public boolean existsUser(@RequestParam(required = true) String mail) {
         return userService.existsUser(mail);
     }
 
-    @PostMapping(ROOT + "/login")
-    public Long loginUser(@RequestBody UserLoginDto loginDto) {
+    @PostMapping("/login")
+    public String loginUser(@RequestBody UserLoginDto loginDto) throws BadRequestException {
         return userService.loginUser(loginDto);
     }
 
-    @PostMapping(ROOT + "/register")
-    public Long registerUser(@RequestBody UserRegisterDto registerDto) {
+    @PostMapping("/register")
+    public String registerUser(@RequestBody UserRegisterDto registerDto) throws BadRequestException {
         return userService.registerUser(registerDto);
+    }
+
+    @PostMapping("/logout")
+    public void logoutUser(@RequestParam(required = true) Long id) {
+        //userService.logoutUser(id);
     }
 
 }

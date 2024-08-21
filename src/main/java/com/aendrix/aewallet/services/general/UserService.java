@@ -1,6 +1,5 @@
 package com.aendrix.aewallet.services.general;
 
-import com.aendrix.aewallet.dto.user.UserDto;
 import com.aendrix.aewallet.dto.user.UserLoginDto;
 import com.aendrix.aewallet.dto.user.UserRegisterDto;
 import org.apache.coyote.BadRequestException;
@@ -8,7 +7,9 @@ import org.apache.coyote.BadRequestException;
 public interface UserService {
     boolean existsUser(String mail);
 
-    Long loginUser(UserLoginDto loginDto);
+    String loginUser(UserLoginDto loginDto);
 
-    Long registerUser(UserRegisterDto registerDto);
+    String registerUser(UserRegisterDto registerDto) throws BadRequestException;
+
+    String refreshToken(String token);
 }

@@ -1,13 +1,11 @@
 package com.aendrix.aewallet.repositories;
 
-import com.aendrix.aewallet.entity.User;
+import com.aendrix.aewallet.entity.WltUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<WltUser, Long> {
 
-    User getUserByMail(String mail);
-
-    User getUserByMailAndPassword(String mail, String password);
-
+    WltUser getUserByMail(String mail);
+    
 }
 

@@ -2,11 +2,15 @@ package com.aendrix.aewallet.services.general;
 
 import com.aendrix.aewallet.dto.user.UserLoginDto;
 import com.aendrix.aewallet.dto.user.UserRegisterDto;
-import com.aendrix.aewallet.entity.User;
-import com.aendrix.aewallet.exceptions.DetailedBadRequestException;
+import com.aendrix.aewallet.entity.WltUser;
 import com.aendrix.aewallet.repositories.UserRepository;
+import com.aendrix.aewallet.services.security.JwtService;
 import org.apache.coyote.BadRequestException;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,47 +19,73 @@ import java.time.LocalDateTime;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserRepository scrzAppRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Override
     public boolean existsUser(String mail) {
-        return this.scrzAppRepository.getUserByMail(mail) != null;
+        return this.userRepository.getUserByMail(mail) != null;
     }
 
     @Override
-    public Long loginUser(UserLoginDto loginDto) {
-        //Immaginare che la pwd sia da crittare
-        User user = this.scrzAppRepository.getUserByMailAndPassword(loginDto.getMail(), loginDto.getPassword());
-
-        if (user == null) {
-            //throw new DetailedBadRequestException();
-            return -1L; //da gestire
-        }
-
-        return this.updateLastLogin(user).getId();
+    public String loginUser(UserLoginDto loginDto) {
+        return this.jwtService.generateToken(this.authenticate(loginDto));
     }
 
     @Override
-    public Long registerUser(UserRegisterDto registerDto) {
-        //Immaginare che la pwd sia da crittare
-        User user = this.scrzAppRepository.getUserByMail(registerDto.getMail());
+    public String registerUser(UserRegisterDto registerDto) throws BadRequestException {
+        WltUser wltUser = this.userRepository.getUserByMail(registerDto.getMail());
 
-        if (user != null) {
-            //throw new DetailedBadRequestException();
-            return -1L; //da gestire
+        if (wltUser != null) {
+            throw new BadRequestException("User already exists");
         }
 
-        user = new User();
-        user.setName(registerDto.getName());
-        user.setSurname(registerDto.getSurname());
-        user.setMail(registerDto.getMail());
-        user.setPassword(registerDto.getPassword()); //da crittare
+        wltUser = new WltUser();
+        //Crittare le info sensibili
+        wltUser.setName(registerDto.getName());
+        wltUser.setSurname(registerDto.getSurname());
+        wltUser.setMail(registerDto.getMail());
+        wltUser.setPassword(hashPassword(registerDto.getPassword()));
+        this.updateLastLogin(wltUser);
 
-        return this.updateLastLogin(user).getId();
+        return this.jwtService.generateToken(this.authenticate(registerDto));
     }
 
-    private User updateLastLogin(User user) {
-        user.setLastlogin(LocalDateTime.now());
-        return this.scrzAppRepository.save(user);
+    @Override
+    public String refreshToken(String token) {
+        return this.jwtService.generateToken(this.userDetailsService.loadUserByUsername(this.jwtService.extractUsername(token.substring(7))));
     }
+
+    private WltUser updateLastLogin(WltUser wltUser) {
+        wltUser.setLastlogin(LocalDateTime.now());
+        return this.userRepository.save(wltUser);
+    }
+
+    private String hashPassword(String plainTextPassword) {
+        return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt(12));
+    }
+
+    private boolean checkPassword(String plainPassword, String hashedPassword) {
+        return BCrypt.checkpw(plainPassword, hashedPassword);
+    }
+
+    private WltUser authenticate(UserLoginDto loginDto) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginDto.getMail(),
+                        loginDto.getPassword()
+                )
+        );
+
+        return this.userRepository.getUserByMail(loginDto.getMail());
+    }
+
 }
