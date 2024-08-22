@@ -4,6 +4,7 @@ import com.aendrix.aewallet.dto.user.UserLoginDto;
 import com.aendrix.aewallet.dto.user.UserRegisterDto;
 import com.aendrix.aewallet.entity.WltUser;
 import com.aendrix.aewallet.repositories.UserRepository;
+import com.aendrix.aewallet.services.security.AESCryptoService;
 import com.aendrix.aewallet.services.security.JwtService;
 import org.apache.coyote.BadRequestException;
 import org.mindrot.jbcrypt.BCrypt;
@@ -29,6 +30,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private AESCryptoService cryptoService;
 
     @Override
     public boolean existsUser(String mail) {
@@ -71,10 +75,6 @@ public class UserServiceImpl implements UserService {
 
     private String hashPassword(String plainTextPassword) {
         return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt(12));
-    }
-
-    private boolean checkPassword(String plainPassword, String hashedPassword) {
-        return BCrypt.checkpw(plainPassword, hashedPassword);
     }
 
     private WltUser authenticate(UserLoginDto loginDto) {
