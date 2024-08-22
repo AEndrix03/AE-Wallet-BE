@@ -1,5 +1,6 @@
 package com.aendrix.aewallet.controllers;
 
+import com.aendrix.aewallet.dto.user.UserDto;
 import com.aendrix.aewallet.dto.user.UserLoginDto;
 import com.aendrix.aewallet.dto.user.UserRegisterDto;
 import com.aendrix.aewallet.services.general.UserService;
@@ -32,6 +33,11 @@ public class AuthController {
     @PostMapping("/logout")
     public void logoutUser(@RequestParam(required = true) Long id) {
         //userService.logoutUser(id);
+    }
+
+    @GetMapping("/userinfo")
+    public UserDto getUserInfo(@RequestHeader("Authorization") String token) {
+        return userService.getUserInfo(token);
     }
 
 }

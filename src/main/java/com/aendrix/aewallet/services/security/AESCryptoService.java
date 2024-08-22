@@ -7,6 +7,9 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.Base64;
 
@@ -63,5 +66,9 @@ public class AESCryptoService {
 
         byte[] plainText = cipher.doFinal(actualCipherText);
         return new String(plainText);
+    }
+
+    public String getKeyFromDockerSecret() throws IOException {
+        return new String(Files.readAllBytes(Paths.get("/run/secrets/encryption_key")));
     }
 }

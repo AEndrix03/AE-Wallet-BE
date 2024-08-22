@@ -1,5 +1,6 @@
 package com.aendrix.aewallet.services.general;
 
+import com.aendrix.aewallet.dto.user.UserDto;
 import com.aendrix.aewallet.dto.user.UserLoginDto;
 import com.aendrix.aewallet.dto.user.UserRegisterDto;
 import org.apache.coyote.BadRequestException;
@@ -12,4 +13,6 @@ public interface UserService {
     String registerUser(UserRegisterDto registerDto) throws BadRequestException;
 
     String refreshToken(String token);
+
+    UserDto getUserInfo(String token);
 }
