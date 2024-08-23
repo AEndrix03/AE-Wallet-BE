@@ -22,6 +22,8 @@ public class AESCryptoService {
     private static final int IV_SIZE = 12;
     private static final int TAG_SIZE = 128;
 
+    private static String secretKey = null;
+
     public String generateKey() throws Exception {
         KeyGenerator keyGenerator = KeyGenerator.getInstance(ALGORITHM);
         keyGenerator.init(KEY_SIZE);
@@ -68,7 +70,14 @@ public class AESCryptoService {
         return new String(plainText);
     }
 
-    public String getKeyFromDockerSecret() throws IOException {
-        return new String(Files.readAllBytes(Paths.get("/run/secrets/encryption_key")));
+    public String getKeyFromDockerSecret() {
+        if (secretKey == null) {
+            try {
+                secretKey = new String(Files.readAllBytes(Paths.get("/run/secrets/encryption_key"))).substring(0, 32);
+            } catch (IOException | NullPointerException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return secretKey;
     }
 }

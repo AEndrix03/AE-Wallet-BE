@@ -47,22 +47,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String registerUser(UserRegisterDto registerDto) throws BadRequestException {
-        WltUser wltUser = this.getUserByMail(registerDto.getMail());
+        WltUser wltUser = this.userRepository.getUserByMail(registerDto.getMail());
 
         if (wltUser != null) {
             throw new BadRequestException("User already exists");
         }
 
         wltUser = new WltUser();
+        String cryptoKey = this.cryptoService.getKeyFromDockerSecret();
+        assert cryptoKey != null;
         try {
-            String cryptoKey = this.cryptoService.generateKey();
-            assert cryptoKey != null;
             wltUser.setName(this.cryptoService.encrypt(registerDto.getName(), cryptoKey));
             wltUser.setSurname(this.cryptoService.encrypt(registerDto.getSurname(), cryptoKey));
-            wltUser.setMail(this.cryptoService.encrypt(registerDto.getMail(), cryptoKey));
         } catch (Exception e) {
             throw new InternalError("Error");
         }
+        wltUser.setMail(registerDto.getMail());
         wltUser.setPassword(hashPassword(registerDto.getPassword()));
         this.updateLastLogin(wltUser);
 
@@ -77,25 +77,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserInfo(String token) {
         try {
-            String cryptoKey = this.cryptoService.generateKey();
+            String cryptoKey = this.cryptoService.getKeyFromDockerSecret();
             assert cryptoKey != null;
             WltUser wltUser = this.userRepository.getUserByMail(this.jwtService.extractUsername(token.substring(7)));
             return UserDto.builder()
                     .id(wltUser.getId())
                     .name(this.cryptoService.decrypt(wltUser.getName(), cryptoKey))
                     .surname(this.cryptoService.decrypt(wltUser.getSurname(), cryptoKey))
-                    .mail(this.cryptoService.decrypt(wltUser.getMail(), cryptoKey))
+                    .mail(wltUser.getMail())
                     .build();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private WltUser getUserByMail(String mail) {
-        try {
-            String cryptoKey = this.cryptoService.generateKey();
-            assert cryptoKey != null;
-            return this.userRepository.getUserByMail(this.cryptoService.encrypt(mail, cryptoKey));
         } catch (Exception e) {
             return null;
         }
@@ -111,20 +101,14 @@ public class UserServiceImpl implements UserService {
     }
 
     private WltUser authenticate(UserLoginDto loginDto) {
-        try {
-            String cryptoKey = this.cryptoService.generateKey();
-            assert cryptoKey != null;
-            String mail = this.cryptoService.encrypt(loginDto.getMail(), cryptoKey);
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            mail,
-                            loginDto.getPassword()
-                    )
-            );
-            return this.userRepository.getUserByMail(mail);
-        } catch (Exception e) {
-            throw new InternalError("Error");
-        }
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginDto.getMail(),
+                        loginDto.getPassword()
+                )
+        );
+
+        return this.userRepository.getUserByMail(loginDto.getMail());
     }
 
 }
