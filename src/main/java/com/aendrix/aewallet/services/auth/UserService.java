@@ -1,4 +1,4 @@
-package com.aendrix.aewallet.services.general;
+package com.aendrix.aewallet.services.auth;
 
 import com.aendrix.aewallet.dto.user.UserDto;
 import com.aendrix.aewallet.dto.user.UserLoginDto;

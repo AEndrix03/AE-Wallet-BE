@@ -1,7 +1,7 @@
 package com.aendrix.aewallet.security;
 
 import com.aendrix.aewallet.entity.WltUser;
-import com.aendrix.aewallet.repositories.UserRepository;
+import com.aendrix.aewallet.repositories.auth.UserRepository;
 import com.aendrix.aewallet.services.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

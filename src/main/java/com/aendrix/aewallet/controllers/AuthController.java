@@ -3,7 +3,7 @@ package com.aendrix.aewallet.controllers;
 import com.aendrix.aewallet.dto.user.UserDto;
 import com.aendrix.aewallet.dto.user.UserLoginDto;
 import com.aendrix.aewallet.dto.user.UserRegisterDto;
-import com.aendrix.aewallet.services.general.UserService;
+import com.aendrix.aewallet.services.auth.UserService;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

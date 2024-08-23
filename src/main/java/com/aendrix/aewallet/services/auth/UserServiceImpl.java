@@ -1,10 +1,10 @@
-package com.aendrix.aewallet.services.general;
+package com.aendrix.aewallet.services.auth;
 
 import com.aendrix.aewallet.dto.user.UserDto;
 import com.aendrix.aewallet.dto.user.UserLoginDto;
 import com.aendrix.aewallet.dto.user.UserRegisterDto;
 import com.aendrix.aewallet.entity.WltUser;
-import com.aendrix.aewallet.repositories.UserRepository;
+import com.aendrix.aewallet.repositories.auth.UserRepository;
 import com.aendrix.aewallet.services.security.AESCryptoService;
 import com.aendrix.aewallet.services.security.JwtService;
 import org.apache.coyote.BadRequestException;
