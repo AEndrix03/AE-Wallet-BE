@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  aewallet:
+    image: ae-wallet
+    build: .
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    secrets:
+      - encryption_key
+
+secrets:
+  encryption_key:
+    external: true
