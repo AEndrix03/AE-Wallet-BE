@@ -1,5 +1,6 @@
 package com.aendrix.aewallet.controllers;
 
+import com.aendrix.aewallet.dto.user.TokenDto;
 import com.aendrix.aewallet.services.auth.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,7 @@ public class TokenController {
     private UserService userService;
 
     @GetMapping()
-    public String refreshToken(@RequestHeader("Authorization") String authHeader) {
+    public TokenDto refreshToken(@RequestHeader("Authorization") String authHeader) {
         return this.userService.refreshToken(authHeader);
     }
 

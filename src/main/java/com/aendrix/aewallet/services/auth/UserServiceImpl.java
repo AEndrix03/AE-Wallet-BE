@@ -1,5 +1,6 @@
 package com.aendrix.aewallet.services.auth;
 
+import com.aendrix.aewallet.dto.user.TokenDto;
 import com.aendrix.aewallet.dto.user.UserDto;
 import com.aendrix.aewallet.dto.user.UserLoginDto;
 import com.aendrix.aewallet.dto.user.UserRegisterDto;
@@ -41,12 +42,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String loginUser(UserLoginDto loginDto) {
-        return this.jwtService.generateToken(this.authenticate(loginDto));
+    public TokenDto loginUser(UserLoginDto loginDto) {
+        return TokenDto.builder().token(this.jwtService.generateToken(this.authenticate(loginDto))).build();
     }
 
     @Override
-    public String registerUser(UserRegisterDto registerDto) throws BadRequestException {
+    public TokenDto registerUser(UserRegisterDto registerDto) throws BadRequestException {
         WltUser wltUser = this.userRepository.getUserByMail(registerDto.getMail());
 
         if (wltUser != null) {
@@ -66,12 +67,16 @@ public class UserServiceImpl implements UserService {
         wltUser.setPassword(hashPassword(registerDto.getPassword()));
         this.updateLastLogin(wltUser);
 
-        return this.jwtService.generateToken(this.authenticate(registerDto));
+        return TokenDto.builder().token(this.jwtService.generateToken(this.authenticate(registerDto))).build();
     }
 
     @Override
-    public String refreshToken(String token) {
-        return this.jwtService.generateToken(this.userDetailsService.loadUserByUsername(this.jwtService.extractUsername(token.substring(7))));
+    public TokenDto refreshToken(String token) {
+        if (this.jwtService.isTokenExpired(token.substring(7))) {
+            return null;
+        }
+
+        return TokenDto.builder().token(this.jwtService.generateToken(this.userDetailsService.loadUserByUsername(this.jwtService.extractUsername(token.substring(7))))).build();
     }
 
     @Override

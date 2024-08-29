@@ -31,7 +31,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public List<WalletDto> getUserWallets(Long userId) {
-        return this.walletRepository.getWalletsByUserId(userId).stream().map(WltWallet::toDto).toList();
+        return this.walletRepository.getWalletsByWltUserId(userId).stream().map(WltWallet::toDto).toList();
     }
 
     @Override
