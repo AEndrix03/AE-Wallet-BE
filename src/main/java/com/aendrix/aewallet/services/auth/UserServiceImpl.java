@@ -6,6 +6,7 @@ import com.aendrix.aewallet.dto.user.UserLoginDto;
 import com.aendrix.aewallet.dto.user.UserRegisterDto;
 import com.aendrix.aewallet.entity.WltUser;
 import com.aendrix.aewallet.repositories.auth.UserRepository;
+import com.aendrix.aewallet.services.UserProvider;
 import com.aendrix.aewallet.services.security.AESCryptoService;
 import com.aendrix.aewallet.services.security.JwtService;
 import org.apache.coyote.BadRequestException;
@@ -13,6 +14,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +38,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private AESCryptoService cryptoService;
 
+    @Autowired
+    private UserProvider userProvider;
+
     @Override
     public boolean existsUser(String mail) {
         return this.userRepository.getUserByMail(mail) != null;
@@ -43,7 +48,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TokenDto loginUser(UserLoginDto loginDto) {
-        return TokenDto.builder().token(this.jwtService.generateToken(this.authenticate(loginDto))).build();
+        WltUser authUser = this.authenticate(loginDto);
+        return this.saveUserSession(authUser);
     }
 
     @Override
@@ -55,19 +61,13 @@ public class UserServiceImpl implements UserService {
         }
 
         wltUser = new WltUser();
-        String cryptoKey = this.cryptoService.getKeyFromDockerSecret();
-        assert cryptoKey != null;
-        try {
-            wltUser.setName(this.cryptoService.encrypt(registerDto.getName(), cryptoKey));
-            wltUser.setSurname(this.cryptoService.encrypt(registerDto.getSurname(), cryptoKey));
-        } catch (Exception e) {
-            throw new InternalError("Error");
-        }
+        encryptUser(wltUser);
         wltUser.setMail(registerDto.getMail());
         wltUser.setPassword(hashPassword(registerDto.getPassword()));
         this.updateLastLogin(wltUser);
 
-        return TokenDto.builder().token(this.jwtService.generateToken(this.authenticate(registerDto))).build();
+        WltUser authUser = this.authenticate(registerDto);
+        return this.saveUserSession(authUser);
     }
 
     @Override
@@ -75,20 +75,25 @@ public class UserServiceImpl implements UserService {
         if (this.jwtService.isTokenExpired(token.substring(7))) {
             return null;
         }
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(this.jwtService.extractUsername(token.substring(7)));
 
-        return TokenDto.builder().token(this.jwtService.generateToken(this.userDetailsService.loadUserByUsername(this.jwtService.extractUsername(token.substring(7))))).build();
+        if (userDetails == null) {
+            return null;
+        }
+
+        WltUser wltUser = this.userRepository.getUserByMail(userDetails.getUsername());
+        return this.saveUserSession(wltUser);
     }
 
     @Override
     public UserDto getUserInfo(String token) {
         try {
-            String cryptoKey = this.cryptoService.getKeyFromDockerSecret();
-            assert cryptoKey != null;
             WltUser wltUser = this.userRepository.getUserByMail(this.jwtService.extractUsername(token.substring(7)));
+            decryptUser(wltUser);
             return UserDto.builder()
                     .id(wltUser.getId())
-                    .name(this.cryptoService.decrypt(wltUser.getName(), cryptoKey))
-                    .surname(this.cryptoService.decrypt(wltUser.getSurname(), cryptoKey))
+                    .name(wltUser.getName())
+                    .surname(wltUser.getSurname())
                     .mail(wltUser.getMail())
                     .build();
         } catch (Exception e) {
@@ -96,9 +101,9 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private WltUser updateLastLogin(WltUser wltUser) {
+    private void updateLastLogin(WltUser wltUser) {
         wltUser.setLastlogin(LocalDateTime.now());
-        return this.userRepository.save(wltUser);
+        this.userRepository.save(wltUser);
     }
 
     private String hashPassword(String plainTextPassword) {
@@ -114,6 +119,37 @@ public class UserServiceImpl implements UserService {
         );
 
         return this.userRepository.getUserByMail(loginDto.getMail());
+    }
+
+    private TokenDto saveUserSession(WltUser authUser) {
+        if (authUser == null) {
+            return null;
+        }
+
+        decryptUser(authUser);
+        this.userProvider.setUserDto(authUser.toDto());
+
+        return TokenDto.builder().token(this.jwtService.generateToken(authUser)).build();
+    }
+
+    private void decryptUser(WltUser authUser) {
+        String cryptoKey = this.cryptoService.getKeyFromDockerSecret();
+        try {
+            authUser.setName(this.cryptoService.decrypt(authUser.getName(), cryptoKey));
+            authUser.setSurname(this.cryptoService.decrypt(authUser.getSurname(), cryptoKey));
+        } catch (Exception e) {
+            throw new InternalError("Error");
+        }
+    }
+
+    private void encryptUser(WltUser authUser) {
+        String cryptoKey = this.cryptoService.getKeyFromDockerSecret();
+        try {
+            authUser.setName(this.cryptoService.encrypt(authUser.getName(), cryptoKey));
+            authUser.setSurname(this.cryptoService.encrypt(authUser.getSurname(), cryptoKey));
+        } catch (Exception e) {
+            throw new InternalError("Error");
+        }
     }
 
 }

@@ -1,5 +1,7 @@
 package com.aendrix.aewallet.entity;
 
+import com.aendrix.aewallet.dto.user.UserDto;
+import com.aendrix.aewallet.utils.DtoMapper;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +20,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class WltUser implements UserDetails {
+public class WltUser implements UserDetails, DtoMapper<UserDto> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,5 +45,15 @@ public class WltUser implements UserDetails {
     @Override
     public String getUsername() {
         return this.getMail();
+    }
+
+    @Override
+    public UserDto toDto() {
+        return UserDto.builder()
+                .id(id)
+                .name(name)
+                .surname(surname)
+                .mail(mail)
+                .build();
     }
 }
