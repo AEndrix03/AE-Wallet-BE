@@ -48,8 +48,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TokenDto loginUser(UserLoginDto loginDto) {
-        WltUser authUser = this.authenticate(loginDto);
-        return this.saveUserSession(authUser);
+        return TokenDto.builder().token(this.jwtService.generateToken(this.authenticate(loginDto))).build();
     }
 
     @Override
@@ -66,8 +65,7 @@ public class UserServiceImpl implements UserService {
         wltUser.setPassword(hashPassword(registerDto.getPassword()));
         this.updateLastLogin(wltUser);
 
-        WltUser authUser = this.authenticate(registerDto);
-        return this.saveUserSession(authUser);
+        return TokenDto.builder().token(this.jwtService.generateToken(this.authenticate(registerDto))).build();
     }
 
     @Override
@@ -81,8 +79,7 @@ public class UserServiceImpl implements UserService {
             return null;
         }
 
-        WltUser wltUser = this.userRepository.getUserByMail(userDetails.getUsername());
-        return this.saveUserSession(wltUser);
+        return TokenDto.builder().token(this.jwtService.generateToken(this.userRepository.getUserByMail(userDetails.getUsername()))).build();
     }
 
     @Override
@@ -90,12 +87,14 @@ public class UserServiceImpl implements UserService {
         try {
             WltUser wltUser = this.userRepository.getUserByMail(this.jwtService.extractUsername(token.substring(7)));
             decryptUser(wltUser);
-            return UserDto.builder()
+            UserDto user = UserDto.builder()
                     .id(wltUser.getId())
                     .name(wltUser.getName())
                     .surname(wltUser.getSurname())
                     .mail(wltUser.getMail())
                     .build();
+            this.userProvider.setUserDto(user);
+            return user;
         } catch (Exception e) {
             return null;
         }
@@ -121,16 +120,19 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.getUserByMail(loginDto.getMail());
     }
 
-    private TokenDto saveUserSession(WltUser authUser) {
+    /*
+    private void saveUserSession(WltUser authUser) {
         if (authUser == null) {
             return null;
         }
 
-        decryptUser(authUser);
-        this.userProvider.setUserDto(authUser.toDto());
+        WltUser decryptedUser = new WltUser(authUser);
+        decryptUser(decryptedUser);
+        this.userProvider.setUserDto(decryptedUser.toDto());
 
         return TokenDto.builder().token(this.jwtService.generateToken(authUser)).build();
     }
+    */
 
     private void decryptUser(WltUser authUser) {
         String cryptoKey = this.cryptoService.getKeyFromDockerSecret();

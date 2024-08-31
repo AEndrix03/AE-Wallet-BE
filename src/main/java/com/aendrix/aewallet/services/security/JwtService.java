@@ -1,5 +1,7 @@
 package com.aendrix.aewallet.services.security;
 
+import com.aendrix.aewallet.dto.user.UserDto;
+import com.aendrix.aewallet.entity.WltUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -33,12 +35,19 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(WltUser user) {
+        HashMap<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("userObj", user.toDto());
+
+        return buildToken(extraClaims, user, jwtExpiration);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return buildToken(extraClaims, userDetails, jwtExpiration);
+    }
+
+    public UserDto extractUserObj(String token) {
+        return extractClaim(token, claims -> claims.get("userObj", UserDto.class));
     }
 
     public long getExpirationTime() {

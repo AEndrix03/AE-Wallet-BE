@@ -1,19 +1,23 @@
 package com.aendrix.aewallet.services;
 
 import com.aendrix.aewallet.dto.user.UserDto;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.stereotype.Service;
 
-@Component
-@Getter
-@Setter
-@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Service
 public class UserProvider {
 
-    private UserDto userDto;
+    private final ThreadLocal<UserDto> userDto = new ThreadLocal<>();
+
+    public void setUserDto(UserDto userDto) {
+        this.userDto.set(userDto);
+    }
+
+    public UserDto getUserDto() {
+        return userDto.get();
+    }
+
+    public void clear() {
+        userDto.remove();
+    }
 
 }

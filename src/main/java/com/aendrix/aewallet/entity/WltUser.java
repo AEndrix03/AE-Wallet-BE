@@ -42,6 +42,15 @@ public class WltUser implements UserDetails, DtoMapper<UserDto> {
         return List.of();
     }
 
+    public WltUser(WltUser user) {
+        this.id = user.getId();
+        this.name = user.getName();
+        this.surname = user.getSurname();
+        this.mail = user.getMail();
+        this.password = user.getPassword();
+        this.lastlogin = user.getLastlogin();
+    }
+
     @Override
     public String getUsername() {
         return this.getMail();
