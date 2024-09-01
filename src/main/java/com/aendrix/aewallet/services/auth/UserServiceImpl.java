@@ -9,6 +9,7 @@ import com.aendrix.aewallet.repositories.auth.UserRepository;
 import com.aendrix.aewallet.services.UserProvider;
 import com.aendrix.aewallet.services.security.AESCryptoService;
 import com.aendrix.aewallet.services.security.JwtService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.coyote.BadRequestException;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +48,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TokenDto loginUser(UserLoginDto loginDto) {
+    public TokenDto loginUser(UserLoginDto loginDto) throws JsonProcessingException {
         return TokenDto.builder().token(this.jwtService.generateToken(this.authenticate(loginDto))).build();
     }
 
     @Override
-    public TokenDto registerUser(UserRegisterDto registerDto) throws BadRequestException {
+    public TokenDto registerUser(UserRegisterDto registerDto) throws BadRequestException, JsonProcessingException {
         WltUser wltUser = this.userRepository.getUserByMail(registerDto.getMail());
 
         if (wltUser != null) {
@@ -69,7 +70,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TokenDto refreshToken(String token) {
+    public TokenDto refreshToken(String token) throws JsonProcessingException {
         if (this.jwtService.isTokenExpired(token.substring(7))) {
             return null;
         }
@@ -78,23 +79,15 @@ public class UserServiceImpl implements UserService {
         if (userDetails == null) {
             return null;
         }
-
-        return TokenDto.builder().token(this.jwtService.generateToken(this.userRepository.getUserByMail(userDetails.getUsername()))).build();
+        WltUser user = this.userRepository.getUserByMail(userDetails.getUsername());
+        decryptUser(user);
+        return TokenDto.builder().token(this.jwtService.generateToken(user)).build();
     }
 
     @Override
     public UserDto getUserInfo(String token) {
         try {
-            WltUser wltUser = this.userRepository.getUserByMail(this.jwtService.extractUsername(token.substring(7)));
-            decryptUser(wltUser);
-            UserDto user = UserDto.builder()
-                    .id(wltUser.getId())
-                    .name(wltUser.getName())
-                    .surname(wltUser.getSurname())
-                    .mail(wltUser.getMail())
-                    .build();
-            this.userProvider.setUserDto(user);
-            return user;
+            return this.userProvider.getUserDto();
         } catch (Exception e) {
             return null;
         }
@@ -117,22 +110,10 @@ public class UserServiceImpl implements UserService {
                 )
         );
 
-        return this.userRepository.getUserByMail(loginDto.getMail());
+        WltUser user = this.userRepository.getUserByMail(loginDto.getMail());
+        decryptUser(user);
+        return user;
     }
-
-    /*
-    private void saveUserSession(WltUser authUser) {
-        if (authUser == null) {
-            return null;
-        }
-
-        WltUser decryptedUser = new WltUser(authUser);
-        decryptUser(decryptedUser);
-        this.userProvider.setUserDto(decryptedUser.toDto());
-
-        return TokenDto.builder().token(this.jwtService.generateToken(authUser)).build();
-    }
-    */
 
     private void decryptUser(WltUser authUser) {
         String cryptoKey = this.cryptoService.getKeyFromDockerSecret();
