@@ -12,6 +12,8 @@ public class WalletDto implements EntityMapper<WltWallet> {
     private Long id;
     private String name;
     private String description;
+    private String headerColor;
+    private String headerBackgroundColor;
 
     @Override
     public WltWallet toEntity() {
@@ -19,6 +21,8 @@ public class WalletDto implements EntityMapper<WltWallet> {
                 .id(id)
                 .name(name)
                 .description(description)
+                .headerColor(headerColor)
+                .headerBackgroundColor(headerBackgroundColor)
                 .build();
     }
 }

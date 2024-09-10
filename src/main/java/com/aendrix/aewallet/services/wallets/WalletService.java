@@ -11,4 +11,6 @@ public interface WalletService {
     List<WalletDto> getUserWallets(Long userId);
 
     WalletDto createWallet(WalletCreateDto walletCreateDto);
+
+    List<WalletDto> getUserWallets();
 }

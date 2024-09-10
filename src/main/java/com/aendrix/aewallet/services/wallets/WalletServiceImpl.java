@@ -6,7 +6,9 @@ import com.aendrix.aewallet.entity.WltUser;
 import com.aendrix.aewallet.entity.WltWallet;
 import com.aendrix.aewallet.repositories.auth.UserRepository;
 import com.aendrix.aewallet.repositories.wallets.WalletRepository;
+import com.aendrix.aewallet.services.UserProvider;
 import com.aendrix.aewallet.services.security.AESCryptoService;
+import com.aendrix.aewallet.utils.AEWltCostants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,9 @@ public class WalletServiceImpl implements WalletService {
 
     @Autowired
     private AESCryptoService cryptoService;
+
+    @Autowired
+    private UserProvider userProvider;
 
     @Override
     public WalletDto getWalletById(Long walletId) {
@@ -45,8 +50,15 @@ public class WalletServiceImpl implements WalletService {
         WltWallet wltWallet = new WltWallet();
         wltWallet.setName(walletCreateDto.getName());
         wltWallet.setDescription(walletCreateDto.getDescription());
+        wltWallet.setHeaderColor(AEWltCostants.DEFAULT_HEADER_COLOR);
+        wltWallet.setHeaderBackgroundColor(AEWltCostants.DEFAULT_HEADER_BACKGROUND_COLOR);
         wltWallet.setWltUser(user);
         wltWallet = this.walletRepository.save(wltWallet);
         return wltWallet.toDto();
+    }
+
+    @Override
+    public List<WalletDto> getUserWallets() {
+        return this.walletRepository.getWalletsByWltUserId(this.userProvider.getUserDto().getId()).stream().map(WltWallet::toDto).toList();
     }
 }
