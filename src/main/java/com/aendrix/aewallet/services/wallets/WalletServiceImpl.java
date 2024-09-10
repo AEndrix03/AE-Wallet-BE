@@ -41,7 +41,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public WalletDto createWallet(WalletCreateDto walletCreateDto) {
-        WltUser user = this.userRepository.findById(walletCreateDto.getUserId()).orElse(null);
+        WltUser user = this.userProvider.getUserDto().toEntity();
 
         if (user == null) {
             throw new IllegalArgumentException("User not found");
@@ -50,8 +50,8 @@ public class WalletServiceImpl implements WalletService {
         WltWallet wltWallet = new WltWallet();
         wltWallet.setName(walletCreateDto.getName());
         wltWallet.setDescription(walletCreateDto.getDescription());
-        wltWallet.setHeaderColor(AEWltCostants.DEFAULT_HEADER_COLOR);
-        wltWallet.setHeaderBackgroundColor(AEWltCostants.DEFAULT_HEADER_BACKGROUND_COLOR);
+        wltWallet.setHeaderColor(walletCreateDto.getHeaderColor() != null ? walletCreateDto.getHeaderColor() : AEWltCostants.DEFAULT_HEADER_COLOR);
+        wltWallet.setHeaderBackgroundColor(walletCreateDto.getHeaderBackgroundColor() != null ? walletCreateDto.getHeaderBackgroundColor() : AEWltCostants.DEFAULT_HEADER_BACKGROUND_COLOR);
         wltWallet.setWltUser(user);
         wltWallet = this.walletRepository.save(wltWallet);
         return wltWallet.toDto();

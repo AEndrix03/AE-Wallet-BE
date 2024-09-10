@@ -6,3 +6,6 @@ docker stack deploy -c docker-compose.yml aewallet
 
 Buildare l'immagine
 docker build -t aewallet .
+
+Chiudi il cluster:
+docker swarm leave --force

@@ -7,7 +7,6 @@ public class WalletCreateDto {
 
     private String name;
     private String description;
-    private Long userId;
     private String headerColor;
     private String headerBackgroundColor;
 

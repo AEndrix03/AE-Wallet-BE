@@ -27,10 +27,10 @@ public class WltWallet implements DtoMapper<WalletDto> {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "headerColor")
+    @Column(name = "headercolor")
     private String headerColor;
 
-    @Column(name = "headerBackgroundColor")
+    @Column(name = "headerbackgroundcolor")
     private String headerBackgroundColor;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,6 +43,8 @@ public class WltWallet implements DtoMapper<WalletDto> {
                 .id(id)
                 .name(name)
                 .description(description)
+                .headerColor(headerColor)
+                .headerBackgroundColor(headerBackgroundColor)
                 .build();
     }
 }

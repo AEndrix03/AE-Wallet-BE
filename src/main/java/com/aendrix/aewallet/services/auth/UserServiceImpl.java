@@ -86,11 +86,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserInfo(String token) {
-        try {
-            return this.userProvider.getUserDto();
-        } catch (Exception e) {
-            return null;
-        }
+        return this.userProvider.getUserDto();
     }
 
     private void updateLastLogin(WltUser wltUser) {

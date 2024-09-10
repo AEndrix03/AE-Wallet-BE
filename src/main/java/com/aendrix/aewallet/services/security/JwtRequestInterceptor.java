@@ -24,7 +24,7 @@ public class JwtRequestInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = extractTokenFromRequest(request);
-        if (token != null) {
+        if (token != null && !this.jwtService.isTokenExpired(token)) {
             String username = this.jwtService.extractUsername(token);
             WltUser userDetails = this.userRepository.getUserByMail(username);
 
