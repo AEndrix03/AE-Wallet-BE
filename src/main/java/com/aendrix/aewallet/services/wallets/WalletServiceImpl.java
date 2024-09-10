@@ -53,6 +53,7 @@ public class WalletServiceImpl implements WalletService {
         wltWallet.setHeaderColor(walletCreateDto.getHeaderColor() != null ? walletCreateDto.getHeaderColor() : AEWltCostants.DEFAULT_HEADER_COLOR);
         wltWallet.setHeaderBackgroundColor(walletCreateDto.getHeaderBackgroundColor() != null ? walletCreateDto.getHeaderBackgroundColor() : AEWltCostants.DEFAULT_HEADER_BACKGROUND_COLOR);
         wltWallet.setWltUser(user);
+        wltWallet.setDeleted(false);
         wltWallet = this.walletRepository.save(wltWallet);
         return wltWallet.toDto();
     }
