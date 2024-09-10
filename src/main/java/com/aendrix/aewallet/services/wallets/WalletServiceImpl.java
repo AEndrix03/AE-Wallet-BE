@@ -36,7 +36,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public List<WalletDto> getUserWallets(Long userId) {
-        return this.walletRepository.getWalletsByWltUserId(userId).stream().map(WltWallet::toDto).toList();
+        return this.walletRepository.getWalletsByWltUserIdAndDeleted(userId, false).stream().map(WltWallet::toDto).toList();
     }
 
     @Override
@@ -59,6 +59,16 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public List<WalletDto> getUserWallets() {
-        return this.walletRepository.getWalletsByWltUserId(this.userProvider.getUserDto().getId()).stream().map(WltWallet::toDto).toList();
+        return this.walletRepository.getWalletsByWltUserIdAndDeleted(this.userProvider.getUserDto().getId(), false).stream().map(WltWallet::toDto).toList();
+    }
+
+    @Override
+    public Long deleteWallet(Long walletId) {
+        WltWallet wallet = this.walletRepository.findById(walletId).orElse(null);
+        if (wallet == null) {
+            throw new IllegalArgumentException("Wallet not found");
+        }
+        wallet.setDeleted(true);
+        return this.walletRepository.save(wallet).getId();
     }
 }

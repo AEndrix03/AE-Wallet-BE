@@ -30,4 +30,9 @@ public class WalletController {
         return this.walletService.createWallet(walletDto).getId();
     }
 
+    @DeleteMapping("/{walletId}")
+    public Long deleteWallet(@PathVariable(name = "walletId") Long walletId) {
+        return this.walletService.deleteWallet(walletId);
+    }
+
 }

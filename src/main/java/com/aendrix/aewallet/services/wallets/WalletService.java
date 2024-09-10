@@ -13,4 +13,6 @@ public interface WalletService {
     WalletDto createWallet(WalletCreateDto walletCreateDto);
 
     List<WalletDto> getUserWallets();
+
+    Long deleteWallet(Long walletId);
 }

@@ -33,6 +33,9 @@ public class WltWallet implements DtoMapper<WalletDto> {
     @Column(name = "headerbackgroundcolor")
     private String headerBackgroundColor;
 
+    @Column(name = "deleted")
+    private Boolean deleted;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user")
     private WltUser wltUser;
