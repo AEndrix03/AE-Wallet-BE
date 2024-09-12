@@ -45,4 +45,30 @@ public class WalletController {
         return this.entryService.getEntriesByWalletId(walletId);
     }
 
+    @GetMapping("/entry/{entryId}")
+    public EntryDto getEntryById(@PathVariable(name = "entryId") Long entryId) {
+        return this.entryService.getEntryById(entryId);
+    }
+
+    @PostMapping("/entry")
+    public Long createEntry(@RequestBody EntryDto entryDto) {
+        return this.entryService.createEntry(entryDto).getId();
+    }
+
+    @PutMapping("/entry")
+    public Long updateEntry(@RequestBody EntryDto entryDto) {
+        return this.entryService.updateEntry(entryDto).getId();
+    }
+
+    @DeleteMapping("/entry/{entryId}")
+    public Long deleteEntry(@PathVariable(name = "entryId") Long entryId) {
+        return this.entryService.deleteEntry(entryId);
+    }
+
+    @GetMapping("/{walletId}/balance")
+    public Double getWalletBalance(@PathVariable(name = "walletId") Long walletId) {
+        return this.walletService.getWalletBalance(walletId);
+    }
+
 }
+

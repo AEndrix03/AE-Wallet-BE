@@ -5,6 +5,7 @@ import com.aendrix.aewallet.dto.wallets.WalletDto;
 import com.aendrix.aewallet.entity.WltUser;
 import com.aendrix.aewallet.entity.WltWallet;
 import com.aendrix.aewallet.repositories.auth.UserRepository;
+import com.aendrix.aewallet.repositories.wallets.EntryRepository;
 import com.aendrix.aewallet.repositories.wallets.WalletRepository;
 import com.aendrix.aewallet.services.UserProvider;
 import com.aendrix.aewallet.services.security.AESCryptoService;
@@ -28,6 +29,9 @@ public class WalletServiceImpl implements WalletService {
 
     @Autowired
     private UserProvider userProvider;
+
+    @Autowired
+    private EntryRepository entryRepository;
 
     @Override
     public WalletDto getWalletById(Long walletId) {
@@ -71,5 +75,10 @@ public class WalletServiceImpl implements WalletService {
         }
         wallet.setDeleted(true);
         return this.walletRepository.save(wallet).getId();
+    }
+
+    @Override
+    public Double getWalletBalance(Long walletId) {
+        return this.entryRepository.getSumOfValuesByWltWalletIdAndDeletedFalse(walletId);
     }
 }

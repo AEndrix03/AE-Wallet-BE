@@ -9,6 +9,8 @@ import java.util.List;
 @Repository
 public interface EntryRepository extends JpaRepository<WltEntry, Long> {
 
-    List<WltEntry> getWltEntriesByWltWalletId(Long walletId);
+    List<WltEntry> getWltEntriesByWltWalletIdAndDeletedFalse(Long walletId);
+
+    Double getSumOfValuesByWltWalletIdAndDeletedFalse(Long walletId);
 
 }
