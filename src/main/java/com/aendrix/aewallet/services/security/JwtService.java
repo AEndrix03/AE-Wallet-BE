@@ -1,5 +1,9 @@
 package com.aendrix.aewallet.services.security;
 
+import com.aendrix.aewallet.dto.user.UserDto;
+import com.aendrix.aewallet.entity.WltUser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -24,6 +28,8 @@ public class JwtService {
     @Value("${security.jwt.expiration-time}")
     private long jwtExpiration;
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -33,12 +39,20 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(WltUser user) throws JsonProcessingException {
+        HashMap<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("userObj", objectMapper.writeValueAsString(user.toDto()));
+
+        return buildToken(extraClaims, user, jwtExpiration);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return buildToken(extraClaims, userDetails, jwtExpiration);
+    }
+
+    public UserDto extractUserObj(String token) throws JsonProcessingException {
+        String userJson = extractClaim(token, claims -> claims.get("userObj", String.class));
+        return objectMapper.readValue(userJson, UserDto.class);
     }
 
     public long getExpirationTime() {
@@ -65,7 +79,7 @@ public class JwtService {
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 

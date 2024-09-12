@@ -1,9 +1,11 @@
 package com.aendrix.aewallet.controllers;
 
+import com.aendrix.aewallet.dto.user.TokenDto;
 import com.aendrix.aewallet.dto.user.UserDto;
 import com.aendrix.aewallet.dto.user.UserLoginDto;
 import com.aendrix.aewallet.dto.user.UserRegisterDto;
-import com.aendrix.aewallet.services.general.UserService;
+import com.aendrix.aewallet.services.auth.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,21 +23,16 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String loginUser(@RequestBody UserLoginDto loginDto) throws BadRequestException {
+    public TokenDto loginUser(@RequestBody UserLoginDto loginDto) throws JsonProcessingException {
         return userService.loginUser(loginDto);
     }
 
     @PostMapping("/register")
-    public String registerUser(@RequestBody UserRegisterDto registerDto) throws BadRequestException {
+    public TokenDto registerUser(@RequestBody UserRegisterDto registerDto) throws BadRequestException, JsonProcessingException {
         return userService.registerUser(registerDto);
     }
 
-    @PostMapping("/logout")
-    public void logoutUser(@RequestParam(required = true) Long id) {
-        //userService.logoutUser(id);
-    }
-
-    @GetMapping("/userinfo")
+    @GetMapping("/user-info")
     public UserDto getUserInfo(@RequestHeader("Authorization") String token) {
         return userService.getUserInfo(token);
     }

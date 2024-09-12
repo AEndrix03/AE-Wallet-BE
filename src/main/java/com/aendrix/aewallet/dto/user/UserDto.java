@@ -2,11 +2,15 @@ package com.aendrix.aewallet.dto.user;
 
 import com.aendrix.aewallet.entity.WltUser;
 import com.aendrix.aewallet.utils.EntityMapper;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDto implements EntityMapper<WltUser> {
 
     private long id;
