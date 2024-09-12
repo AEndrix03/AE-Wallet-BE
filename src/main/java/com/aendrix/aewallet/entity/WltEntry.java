@@ -1,15 +1,16 @@
 package com.aendrix.aewallet.entity;
 
+import com.aendrix.aewallet.dto.wallets.EntryDto;
+import com.aendrix.aewallet.utils.DtoMapper;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Table(name = "wlt_entry")
-public class WltEntry {
+public class WltEntry implements DtoMapper<EntryDto> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,5 +31,17 @@ public class WltEntry {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_wallet")
-    private WltWallet wallet;
+    private WltWallet wltWallet;
+
+    @Override
+    public EntryDto toDto() {
+        return EntryDto.builder()
+                .id(this.id)
+                .title(this.title)
+                .description(this.description)
+                .date(this.date)
+                .value(this.value)
+                .walletId(this.wltWallet.getId())
+                .build();
+    }
 }
