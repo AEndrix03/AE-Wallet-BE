@@ -79,6 +79,6 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public Double getWalletBalance(Long walletId) {
-        return this.entryRepository.getSumOfValuesByWltWalletIdAndDeletedFalse(walletId);
+        return this.entryRepository.getWalletBalance(walletId);
     }
 }
