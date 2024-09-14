@@ -3,6 +3,7 @@ package com.aendrix.aewallet.controllers;
 import com.aendrix.aewallet.dto.wallets.EntryDto;
 import com.aendrix.aewallet.dto.wallets.WalletCreateDto;
 import com.aendrix.aewallet.dto.wallets.WalletDto;
+import com.aendrix.aewallet.dto.wallets.WalletUpdateDto;
 import com.aendrix.aewallet.services.wallets.EntryService;
 import com.aendrix.aewallet.services.wallets.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,11 @@ public class WalletController {
     @GetMapping("/{walletId}/entries")
     public List<EntryDto> getEntriesByWalletId(@PathVariable(name = "walletId") Long walletId) {
         return this.entryService.getEntriesByWalletId(walletId);
+    }
+
+    @PutMapping()
+    public Long updateWallet(@RequestBody WalletUpdateDto walletDto) {
+        return this.walletService.updateWallet(walletDto);
     }
 
     @GetMapping("/entry/{entryId}")

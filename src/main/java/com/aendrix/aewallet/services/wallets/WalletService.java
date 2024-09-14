@@ -2,6 +2,7 @@ package com.aendrix.aewallet.services.wallets;
 
 import com.aendrix.aewallet.dto.wallets.WalletCreateDto;
 import com.aendrix.aewallet.dto.wallets.WalletDto;
+import com.aendrix.aewallet.dto.wallets.WalletUpdateDto;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface WalletService {
     Long deleteWallet(Long walletId);
 
     Double getWalletBalance(Long walletId);
+
+    Long updateWallet(WalletUpdateDto walletUpdateDto);
 }

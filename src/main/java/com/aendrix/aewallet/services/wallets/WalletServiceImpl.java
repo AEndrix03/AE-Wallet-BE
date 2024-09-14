@@ -2,6 +2,7 @@ package com.aendrix.aewallet.services.wallets;
 
 import com.aendrix.aewallet.dto.wallets.WalletCreateDto;
 import com.aendrix.aewallet.dto.wallets.WalletDto;
+import com.aendrix.aewallet.dto.wallets.WalletUpdateDto;
 import com.aendrix.aewallet.entity.WltUser;
 import com.aendrix.aewallet.entity.WltWallet;
 import com.aendrix.aewallet.repositories.auth.UserRepository;
@@ -80,5 +81,18 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public Double getWalletBalance(Long walletId) {
         return this.entryRepository.getWalletBalance(walletId);
+    }
+
+    @Override
+    public Long updateWallet(WalletUpdateDto walletUpdateDto) {
+        WltWallet wallet = this.walletRepository.findById(walletUpdateDto.getId()).orElse(null);
+        if (wallet == null) {
+            throw new IllegalArgumentException("Wallet not found");
+        }
+        wallet.setName(walletUpdateDto.getName());
+        wallet.setDescription(walletUpdateDto.getDescription());
+        wallet.setHeaderColor(walletUpdateDto.getHeaderColor());
+        wallet.setHeaderBackgroundColor(walletUpdateDto.getHeaderBackgroundColor());
+        return this.walletRepository.save(wallet).getId();
     }
 }
