@@ -12,6 +12,7 @@ WORKDIR /app
 
 COPY --from=build /app/target/aewallet-0.0.1-beta1.jar app.jar
 EXPOSE 8080
+EXPOSE 8433
 
 # Comando per eseguire l'applicazione
 ENTRYPOINT ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "app.jar"]
