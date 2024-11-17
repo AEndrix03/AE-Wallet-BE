@@ -78,5 +78,10 @@ public class WalletController {
         return this.entryService.getFilteredEntries(filter);
     }
 
+    @GetMapping("/entries/alltime")
+    public List<EntryDto> getAllTimeEntries() {
+        return this.entryService.getAllTimeEntries();
+    }
+
 }
 

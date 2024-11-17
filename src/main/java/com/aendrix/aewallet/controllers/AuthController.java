@@ -33,8 +33,8 @@ public class AuthController {
     }
 
     @GetMapping("/user-info")
-    public UserDto getUserInfo(@RequestHeader("Authorization") String token) {
-        return userService.getUserInfo(token);
+    public UserDto getUserInfo() {
+        return userService.getUserInfo();
     }
 
 }

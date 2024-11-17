@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserInfo(String token) {
+    public UserDto getUserInfo() {
         return this.userProvider.getUserDto();
     }
 

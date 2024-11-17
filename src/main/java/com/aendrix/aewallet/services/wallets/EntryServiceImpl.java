@@ -1,5 +1,6 @@
 package com.aendrix.aewallet.services.wallets;
 
+import com.aendrix.aewallet.dto.user.UserDto;
 import com.aendrix.aewallet.dto.wallets.EntryDto;
 import com.aendrix.aewallet.dto.wallets.EntryFilterDto;
 import com.aendrix.aewallet.entity.WltEntry;
@@ -18,6 +19,9 @@ public class EntryServiceImpl implements EntryService {
 
     @Autowired
     private WalletService walletService;
+
+    @Autowired
+    private UserDto userDto;
 
     @Override
     public List<EntryDto> getEntriesByWalletId(Long walletId) {
@@ -95,6 +99,13 @@ public class EntryServiceImpl implements EntryService {
         }
 
         return entries;
+    }
+
+    @Override
+    public List<EntryDto> getAllTimeEntries() {
+        return this.entryRepository.getAllTimeEntries(this.userDto.getId()).stream()
+                .map(WltEntry::toDto)
+                .toList();
     }
 
 }

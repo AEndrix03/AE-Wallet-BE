@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserDto implements EntityMapper<WltUser> {
 
-    private long id;
+    private Long id;
     private String name;
     private String surname;
     private String mail;

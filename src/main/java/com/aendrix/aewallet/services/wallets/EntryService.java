@@ -18,4 +18,6 @@ public interface EntryService {
     Long deleteEntry(Long entryId);
 
     List<EntryDto> getFilteredEntries(@NotNull EntryFilterDto filter);
+
+    List<EntryDto> getAllTimeEntries();
 }

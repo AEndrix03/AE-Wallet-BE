@@ -16,5 +16,5 @@ public interface UserService {
 
     TokenDto refreshToken(String token) throws JsonProcessingException;
 
-    UserDto getUserInfo(String token);
+    UserDto getUserInfo();
 }

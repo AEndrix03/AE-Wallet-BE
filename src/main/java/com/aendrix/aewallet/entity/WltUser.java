@@ -25,7 +25,7 @@ public class WltUser implements UserDetails, DtoMapper<UserDto> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long id;
+    private Long id;
     @Column(name = "name")
     private String name;
     @Column(name = "surname")
