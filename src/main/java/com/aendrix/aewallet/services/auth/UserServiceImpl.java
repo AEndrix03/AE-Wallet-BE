@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void decryptUser(WltUser authUser) {
-        String cryptoKey = this.cryptoService.getKeyFromDockerSecret();
+        String cryptoKey = this.cryptoService.getKey();
         try {
             authUser.setName(this.cryptoService.decrypt(authUser.getName(), cryptoKey));
             authUser.setSurname(this.cryptoService.decrypt(authUser.getSurname(), cryptoKey));
@@ -122,7 +122,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void encryptUser(WltUser authUser) {
-        String cryptoKey = this.cryptoService.getKeyFromDockerSecret();
+        String cryptoKey = this.cryptoService.getKey();
         try {
             authUser.setName(this.cryptoService.encrypt(authUser.getName(), cryptoKey));
             authUser.setSurname(this.cryptoService.encrypt(authUser.getSurname(), cryptoKey));

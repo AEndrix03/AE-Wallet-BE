@@ -7,9 +7,6 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.Base64;
 
@@ -70,13 +67,13 @@ public class AESCryptoService {
         return new String(plainText);
     }
 
-    public String getKeyFromDockerSecret() {
+    public String getKey() {
         if (secretKey == null) {
-            try {
-                secretKey = new String(Files.readAllBytes(Paths.get("/run/secrets/encryption_key"))).substring(0, 32);
-            } catch (IOException | NullPointerException e) {
-                throw new RuntimeException(e);
+            secretKey = System.getenv("ENCRYPTION_KEY");
+            if (secretKey == null) {
+                throw new RuntimeException("Encryption key not found in environment variables");
             }
+            secretKey = secretKey.substring(0, 32);
         }
         return secretKey;
     }
