@@ -61,9 +61,11 @@ public class UserServiceImpl implements UserService {
         }
 
         wltUser = new WltUser();
-        encryptUser(wltUser);
+        wltUser.setName(registerDto.getName());
+        wltUser.setSurname(registerDto.getSurname());
         wltUser.setMail(registerDto.getMail());
         wltUser.setPassword(hashPassword(registerDto.getPassword()));
+        encryptUser(wltUser);
         this.updateLastLogin(wltUser);
 
         return TokenDto.builder().token(this.jwtService.generateToken(this.authenticate(registerDto))).build();
