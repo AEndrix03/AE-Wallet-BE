@@ -15,4 +15,7 @@ public interface EntryRepository extends JpaRepository<WltEntry, Long> {
     @Query("SELECT SUM(e.value) FROM WltEntry e WHERE e.wltWallet.id = ?1 AND e.deleted = false")
     Double getWalletBalance(Long walletId);
 
+    @Query("SELECT e FROM WltEntry e WHERE e.wltWallet.wltUser.id = ?1 AND e.deleted = false AND e.wltWallet.deleted = false")
+    List<WltEntry> getAllTimeEntries(Long userId);
+
 }

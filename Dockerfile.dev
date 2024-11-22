@@ -14,4 +14,4 @@ COPY --from=build /app/target/aewallet-0.0.1-beta1.jar aewallet.jar
 
 EXPOSE 8443
 
-ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "aewallet.jar"]
+ENTRYPOINT ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "aewallet.jar"]

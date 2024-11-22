@@ -4,6 +4,7 @@ import com.aendrix.aewallet.entity.WltUser;
 import com.aendrix.aewallet.repositories.auth.UserRepository;
 import com.aendrix.aewallet.services.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -39,6 +40,15 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    @Value("${ALLOWED_ORIGINS}")
+    private String allowedOrigins;
+
+    @Value("${ALLOWED_METHODS}")
+    private String allowedMethods;
+
+    @Value("${ALLOWED_HEADERS}")
+    private String allowedHeaders;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -62,9 +72,9 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:8080", "http://217.160.248.228:81", "http://217.160.248.228:8080"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
-        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedOrigins(List.of(this.allowedOrigins.split(",")));
+        configuration.setAllowedMethods(List.of(this.allowedMethods.split(",")));
+        configuration.setAllowedHeaders(List.of(this.allowedHeaders.split(",")));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 

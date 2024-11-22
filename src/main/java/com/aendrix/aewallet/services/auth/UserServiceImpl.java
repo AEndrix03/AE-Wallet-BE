@@ -61,9 +61,11 @@ public class UserServiceImpl implements UserService {
         }
 
         wltUser = new WltUser();
-        encryptUser(wltUser);
+        wltUser.setName(registerDto.getName());
+        wltUser.setSurname(registerDto.getSurname());
         wltUser.setMail(registerDto.getMail());
         wltUser.setPassword(hashPassword(registerDto.getPassword()));
+        encryptUser(wltUser);
         this.updateLastLogin(wltUser);
 
         return TokenDto.builder().token(this.jwtService.generateToken(this.authenticate(registerDto))).build();
@@ -85,7 +87,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserInfo(String token) {
+    public UserDto getUserInfo() {
         return this.userProvider.getUserDto();
     }
 
@@ -112,7 +114,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void decryptUser(WltUser authUser) {
-        String cryptoKey = this.cryptoService.getKeyFromDockerSecret();
+        String cryptoKey = this.cryptoService.getKey();
         try {
             authUser.setName(this.cryptoService.decrypt(authUser.getName(), cryptoKey));
             authUser.setSurname(this.cryptoService.decrypt(authUser.getSurname(), cryptoKey));
@@ -122,7 +124,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void encryptUser(WltUser authUser) {
-        String cryptoKey = this.cryptoService.getKeyFromDockerSecret();
+        String cryptoKey = this.cryptoService.getKey();
         try {
             authUser.setName(this.cryptoService.encrypt(authUser.getName(), cryptoKey));
             authUser.setSurname(this.cryptoService.encrypt(authUser.getSurname(), cryptoKey));
