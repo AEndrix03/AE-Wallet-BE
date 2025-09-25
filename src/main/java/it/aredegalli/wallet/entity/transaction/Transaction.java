@@ -4,6 +4,7 @@ import it.aredegalli.wallet.entity.portfolio.Portfolio;
 import it.aredegalli.wallet.enums.CurrencyEnum;
 import it.aredegalli.wallet.enums.transaction.TransactionCategoryEnum;
 import it.aredegalli.wallet.enums.transaction.TransactionTypeEnum;
+import it.aredegalli.wallet.security.encryption.CryptoConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,12 +24,14 @@ public class Transaction {
     @Column(name = "id", nullable = false)
     private UUID id;
 
+    @Convert(converter = CryptoConverter.class)
     @Column(name = "description", length = 128)
     private String description;
 
     @Column(name = "amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal amount;
 
+    @Convert(converter = CryptoConverter.class)
     @Column(name = "note", length = Integer.MAX_VALUE)
     private String note;
 

@@ -5,6 +5,7 @@ import it.aredegalli.wallet.entity.user.User;
 import it.aredegalli.wallet.enums.CurrencyEnum;
 import it.aredegalli.wallet.enums.portfolio.PortfolioStatusEnum;
 import it.aredegalli.wallet.enums.portfolio.PortfolioTypeEnum;
+import it.aredegalli.wallet.security.encryption.CryptoConverter;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -26,9 +27,11 @@ public class Portfolio {
     @Column(name = "id", nullable = false)
     private UUID id;
 
+    @Convert(converter = CryptoConverter.class)
     @Column(name = "name", nullable = false, length = 64)
     private String name;
 
+    @Convert(converter = CryptoConverter.class)
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
