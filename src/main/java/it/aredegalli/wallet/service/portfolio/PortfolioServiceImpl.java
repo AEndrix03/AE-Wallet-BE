@@ -69,4 +69,10 @@ public class PortfolioServiceImpl implements PortfolioService {
         return this.portfolioRepository.save(portfolio).getId();
     }
 
+    @Override
+    public UUID deletePortfolio(UUID portfolioId) {
+        this.portfolioRepository.deleteById(portfolioId);
+        return portfolioId;
+    }
+
 }

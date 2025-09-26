@@ -19,4 +19,6 @@ public interface PortfolioService {
     Optional<PortfolioDto> findPortfolioById(UUID portfolioId);
 
     UUID savePortfolio(PortfolioSaveDto saveDto);
+
+    UUID deletePortfolio(UUID portfolioId);
 }
