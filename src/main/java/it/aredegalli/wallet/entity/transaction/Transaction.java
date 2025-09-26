@@ -6,8 +6,7 @@ import it.aredegalli.wallet.enums.transaction.TransactionCategoryEnum;
 import it.aredegalli.wallet.enums.transaction.TransactionTypeEnum;
 import it.aredegalli.wallet.security.encryption.CryptoConverter;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
@@ -17,6 +16,9 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "transaction")
 public class Transaction {
     @Id
