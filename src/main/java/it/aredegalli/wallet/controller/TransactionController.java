@@ -22,22 +22,6 @@ public class TransactionController {
 
     private final TransactionService transactionService;
 
-    /*
-    List<TransactionTypeDto> getAllTransactionTypes();
-
-    List<TransactionCategoryDto> getAllTransactionCategories();
-
-    Page<TransactionDto> getUserTransactionsFiltered(UUID userId,
-                                                     TransactionFilterDto filter,
-                                                     Pageable pageable);
-
-    Page<TransactionDto> getPortfolioTransactions(UUID portfolioId, Pageable pageable);
-
-    UUID saveTransaction(TransactionDto dto);
-
-    UUID deleteTransaction(UUID id);
-     */
-
     @GetMapping("types")
     public List<TransactionTypeDto> getAllTransactionTypes() {
         return this.transactionService.getAllTransactionTypes();
