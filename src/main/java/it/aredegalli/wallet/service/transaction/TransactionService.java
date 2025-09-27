@@ -21,4 +21,8 @@ public interface TransactionService {
                                                      Pageable pageable);
 
     Page<TransactionDto> getPortfolioTransactions(UUID portfolioId, Pageable pageable);
+
+    UUID saveTransaction(TransactionDto dto);
+
+    UUID deleteTransaction(UUID id);
 }

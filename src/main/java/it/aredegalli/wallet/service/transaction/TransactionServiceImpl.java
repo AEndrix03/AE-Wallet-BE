@@ -51,7 +51,6 @@ public class TransactionServiceImpl implements TransactionService {
     public Page<TransactionDto> getUserTransactionsFiltered(UUID userId,
                                                             TransactionFilterDto filter,
                                                             Pageable pageable) {
-
         return this.transactionFinder.getUserTransactionsFiltered(userId, filter, pageable);
     }
 
@@ -61,5 +60,15 @@ public class TransactionServiceImpl implements TransactionService {
                 .map(transactionMapper::toDto);
     }
 
+    @Override
+    public UUID saveTransaction(TransactionDto dto) {
+        return this.transactionRepository.save(this.transactionMapper.toEntity(dto)).getId();
+    }
+
+    @Override
+    public UUID deleteTransaction(UUID id) {
+        this.transactionRepository.deleteById(id);
+        return id;
+    }
 
 }
