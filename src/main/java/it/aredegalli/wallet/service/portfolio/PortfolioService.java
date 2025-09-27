@@ -16,7 +16,7 @@ public interface PortfolioService {
 
     List<PortfolioDto> getAllUserPortfolios(UUID userId);
 
-    Optional<PortfolioDto> findPortfolioById(UUID portfolioId);
+    Optional<PortfolioDto> getPortfolioById(UUID portfolioId);
 
     UUID savePortfolio(PortfolioSaveDto saveDto);
 

@@ -57,7 +57,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public Optional<PortfolioDto> findPortfolioById(UUID portfolioId) {
+    public Optional<PortfolioDto> getPortfolioById(UUID portfolioId) {
         return this.portfolioRepository.findById(portfolioId)
                 .map(portfolioMapper::toDto);
     }
