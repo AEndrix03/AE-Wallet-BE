@@ -19,21 +19,7 @@ import java.util.UUID;
 public class PortfolioController {
 
     private final PortfolioService portfolioService;
-
-    /*
-    List<PortfolioTypeDto> getAllPortfolioTypes();
-
-    List<PortfolioStatusDto> getAllPortfolioStatuses();
-
-    List<PortfolioDto> getAllUserPortfolios(UUID userId);
-
-    Optional<PortfolioDto> findPortfolioById(UUID portfolioId);
-
-    UUID savePortfolio(PortfolioSaveDto saveDto);
-
-    UUID deletePortfolio(UUID portfolioId);
-     */
-
+    
     @GetMapping("types")
     public List<PortfolioTypeDto> getAllPortfolioTypes() {
         return this.portfolioService.getAllPortfolioTypes();
