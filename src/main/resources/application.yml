@@ -92,3 +92,7 @@ springdoc:
     operationsSorter: method
     tagsSorter: alpha
   show-actuator: true
+
+praetor:
+  url: ${PRAETOR_URL}
+  applicationName: ${PRAETOR_APP_NAME}

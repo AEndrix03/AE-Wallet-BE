@@ -1,7 +1,5 @@
 package it.aredegalli.wallet.service.user;
 
-import java.util.UUID;
-
 public interface UserService {
-    Boolean hello(UUID userId);
+    Boolean hello(String token, String authenticator);
 }
