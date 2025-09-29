@@ -17,7 +17,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("hello")
-    public Boolean getAllTransactionTypes(@RequestParam UUID id) {
+    public Boolean hello(@RequestParam UUID id) {
         return this.userService.hello(id);
     }
 
