@@ -1,7 +1,6 @@
 package it.aredegalli.wallet.dto.transaction;
 
 import it.aredegalli.wallet.enums.CurrencyEnum;
-import it.aredegalli.wallet.enums.transaction.TransactionCategoryEnum;
 import it.aredegalli.wallet.enums.transaction.TransactionTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +20,6 @@ public class TransactionDto {
     private String description;
     private Double amount;
     private CurrencyEnum currency;
-    private TransactionCategoryEnum category;
     private TransactionTypeEnum type;
     private LocalDateTime date;
     private UUID portfolioId;

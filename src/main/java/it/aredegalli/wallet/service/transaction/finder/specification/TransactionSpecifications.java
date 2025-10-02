@@ -2,7 +2,6 @@ package it.aredegalli.wallet.service.transaction.finder.specification;
 
 import it.aredegalli.wallet.entity.transaction.Transaction;
 import it.aredegalli.wallet.enums.CurrencyEnum;
-import it.aredegalli.wallet.enums.transaction.TransactionCategoryEnum;
 import it.aredegalli.wallet.enums.transaction.TransactionTypeEnum;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
@@ -33,13 +32,6 @@ public class TransactionSpecifications {
         return (root, query, criteriaBuilder) -> {
             if (currency == null) return criteriaBuilder.conjunction();
             return criteriaBuilder.equal(root.get("currency"), currency);
-        };
-    }
-
-    public static Specification<Transaction> hasCategory(TransactionCategoryEnum category) {
-        return (root, query, criteriaBuilder) -> {
-            if (category == null) return criteriaBuilder.conjunction();
-            return criteriaBuilder.equal(root.get("category"), category);
         };
     }
 

@@ -1,6 +1,5 @@
 package it.aredegalli.wallet.service.transaction;
 
-import it.aredegalli.wallet.dto.transaction.TransactionCategoryDto;
 import it.aredegalli.wallet.dto.transaction.TransactionDto;
 import it.aredegalli.wallet.dto.transaction.TransactionTypeDto;
 import it.aredegalli.wallet.dto.transaction.filter.TransactionFilterDto;
@@ -13,8 +12,6 @@ import java.util.UUID;
 public interface TransactionService {
 
     List<TransactionTypeDto> getAllTransactionTypes();
-
-    List<TransactionCategoryDto> getAllTransactionCategories();
 
     Page<TransactionDto> getUserTransactionsFiltered(UUID userId,
                                                      TransactionFilterDto filter,

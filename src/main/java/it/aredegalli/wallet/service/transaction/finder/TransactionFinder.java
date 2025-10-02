@@ -33,7 +33,6 @@ public class TransactionFinder {
                 .where(TransactionSpecifications.belongsToUser(userId))
                 .and(TransactionSpecifications.hasAmountGreaterThan(filter.getAmount()))
                 .and(TransactionSpecifications.hasCurrency(filter.getCurrency()))
-                .and(TransactionSpecifications.hasCategory(filter.getCategory()))
                 .and(TransactionSpecifications.hasType(filter.getType()))
                 .and(TransactionSpecifications.createdBetween(filter.getDateFrom(), filter.getDateTo()));
 

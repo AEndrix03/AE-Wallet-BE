@@ -2,7 +2,6 @@ package it.aredegalli.wallet.entity.transaction;
 
 import it.aredegalli.wallet.entity.portfolio.Portfolio;
 import it.aredegalli.wallet.enums.CurrencyEnum;
-import it.aredegalli.wallet.enums.transaction.TransactionCategoryEnum;
 import it.aredegalli.wallet.enums.transaction.TransactionTypeEnum;
 import it.aredegalli.wallet.security.encryption.CryptoConverter;
 import jakarta.persistence.*;
@@ -41,9 +40,6 @@ public class Transaction {
 
     @Column(name = "currency", nullable = false)
     private CurrencyEnum currency;
-
-    @Column(name = "category", nullable = false)
-    private TransactionCategoryEnum category;
 
     @Column(name = "type", nullable = false)
     private TransactionTypeEnum type;

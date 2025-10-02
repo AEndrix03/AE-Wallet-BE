@@ -1,6 +1,5 @@
 package it.aredegalli.wallet.controller;
 
-import it.aredegalli.wallet.dto.transaction.TransactionCategoryDto;
 import it.aredegalli.wallet.dto.transaction.TransactionDto;
 import it.aredegalli.wallet.dto.transaction.TransactionTypeDto;
 import it.aredegalli.wallet.dto.transaction.filter.TransactionFilterDto;
@@ -25,11 +24,6 @@ public class TransactionController {
     @GetMapping("types")
     public List<TransactionTypeDto> getAllTransactionTypes() {
         return this.transactionService.getAllTransactionTypes();
-    }
-
-    @GetMapping("category")
-    public List<TransactionCategoryDto> getAllTransactionCategories() {
-        return this.transactionService.getAllTransactionCategories();
     }
 
     @GetMapping("user")
