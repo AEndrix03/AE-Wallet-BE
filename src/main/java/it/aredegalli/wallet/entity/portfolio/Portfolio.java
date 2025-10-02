@@ -9,6 +9,7 @@ import it.aredegalli.wallet.security.encryption.CryptoConverter;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -23,7 +24,8 @@ import java.util.UUID;
 @Table(name = "portfolio")
 public class Portfolio {
     @Id
-    @ColumnDefault("uuid_generate_v4()")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id", nullable = false)
     private UUID id;
 
@@ -45,15 +47,12 @@ public class Portfolio {
     @Column(name = "image")
     private UUID imageId;
 
-    @Convert(converter = CurrencyEnum.CurrencyEnumConverter.class)
     @Column(name = "currency", nullable = false)
     private CurrencyEnum currency;
 
-    @Convert(converter = PortfolioTypeEnum.PortfolioTypeEnumConverter.class)
     @Column(name = "type", nullable = false)
     private PortfolioTypeEnum type;
 
-    @Convert(converter = PortfolioStatusEnum.PortfolioStatusEnumConverter.class)
     @Column(name = "status")
     private PortfolioStatusEnum status;
 

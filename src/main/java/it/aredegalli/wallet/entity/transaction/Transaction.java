@@ -8,6 +8,7 @@ import it.aredegalli.wallet.security.encryption.CryptoConverter;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -22,7 +23,8 @@ import java.util.UUID;
 @Table(name = "transaction")
 public class Transaction {
     @Id
-    @ColumnDefault("uuid_generate_v4()")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id", nullable = false)
     private UUID id;
 
@@ -37,15 +39,12 @@ public class Transaction {
     @Column(name = "note", length = Integer.MAX_VALUE)
     private String note;
 
-    @Convert(converter = CurrencyEnum.CurrencyEnumConverter.class)
     @Column(name = "currency", nullable = false)
     private CurrencyEnum currency;
 
-    @Convert(converter = TransactionCategoryEnum.TransactionCategoryEnumConverter.class)
     @Column(name = "category", nullable = false)
     private TransactionCategoryEnum category;
 
-    @Convert(converter = TransactionTypeEnum.TransactionTypeEnumConverter.class)
     @Column(name = "type", nullable = false)
     private TransactionTypeEnum type;
 

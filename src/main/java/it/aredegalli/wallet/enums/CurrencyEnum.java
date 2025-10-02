@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum CurrencyEnum implements IEnum {
 
-    EUR("€"), USD("$"), GBP("£"), JPY("¥");
+    EUR("EUR"), USD("USD"), GBP("GBP"), JPY("JPY");
 
     private final String symbol;
 

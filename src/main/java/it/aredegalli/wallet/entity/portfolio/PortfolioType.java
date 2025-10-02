@@ -1,7 +1,10 @@
 package it.aredegalli.wallet.entity.portfolio;
 
 import it.aredegalli.wallet.enums.portfolio.PortfolioTypeEnum;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -15,8 +18,10 @@ import java.util.UUID;
 @Table(name = "portfolio_type")
 public class PortfolioType {
     @Id
-    @Convert(converter = PortfolioTypeEnum.PortfolioTypeEnumConverter.class)
-    @Column(name = "code", nullable = false, length = 3)
+    @Column(name = "code", nullable = false, length = 3, columnDefinition = "VARCHAR(3)")
+    private String id;
+
+    @Column(name = "code", nullable = false, insertable = false, updatable = false, length = 3, columnDefinition = "VARCHAR(3)")
     private PortfolioTypeEnum code;
 
     @Column(name = "name", nullable = false, length = 32)
