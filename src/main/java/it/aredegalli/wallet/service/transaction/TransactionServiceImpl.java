@@ -3,6 +3,8 @@ package it.aredegalli.wallet.service.transaction;
 import it.aredegalli.wallet.dto.transaction.TransactionDto;
 import it.aredegalli.wallet.dto.transaction.TransactionTypeDto;
 import it.aredegalli.wallet.dto.transaction.filter.TransactionFilterDto;
+import it.aredegalli.wallet.entity.transaction.Transaction;
+import it.aredegalli.wallet.enums.transaction.TransactionTypeEnum;
 import it.aredegalli.wallet.mapper.transaction.TransactionMapper;
 import it.aredegalli.wallet.mapper.transaction.TransactionTypeMapper;
 import it.aredegalli.wallet.repository.transaction.TransactionRepository;
@@ -50,6 +52,14 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public UUID saveTransaction(TransactionDto dto) {
+        Transaction transaction = this.transactionMapper.toEntity(dto);
+
+        if (transaction.getType().equals(TransactionTypeEnum.INCOME) && transaction.getAmount() != null && transaction.getAmount().intValue() < 0) {
+            transaction.setAmount(transaction.getAmount().abs());
+        } else if (transaction.getType().equals(TransactionTypeEnum.EXPENSE) && transaction.getAmount() != null && transaction.getAmount().intValue() > 0) {
+            transaction.setAmount((transaction.getAmount().negate()));
+        }
+
         return this.transactionRepository.save(this.transactionMapper.toEntity(dto)).getId();
     }
 
