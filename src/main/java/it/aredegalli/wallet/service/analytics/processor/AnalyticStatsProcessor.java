@@ -10,6 +10,7 @@ import org.springframework.web.servlet.LocaleResolver;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
@@ -27,11 +28,11 @@ public class AnalyticStatsProcessor {
     }
 
     public BigDecimal getTotalMonthlyIncomes(UUID userId, LocalDate fromDate, LocalDate toDate) {
-        return transactionRepository.sumAmountsByUserIdAndTypeAndDate(userId, TransactionTypeEnum.INCOME, fromDate.atStartOfDay(ZoneOffset.UTC).toInstant(), toDate.atStartOfDay(ZoneOffset.UTC).toInstant()).abs();
+        return transactionRepository.sumAmountsByUserIdAndTypeAndDate(userId, TransactionTypeEnum.INCOME, fromDate.atStartOfDay(ZoneOffset.UTC).toInstant(), toDate.atTime(LocalTime.MAX).atZone(ZoneOffset.UTC).toInstant()).abs();
     }
 
     public BigDecimal getTotalMonthlyExpenses(UUID userId, LocalDate fromDate, LocalDate toDate) {
-        return transactionRepository.sumAmountsByUserIdAndTypeAndDate(userId, TransactionTypeEnum.EXPENSE, fromDate.atStartOfDay(ZoneOffset.UTC).toInstant(), toDate.atStartOfDay(ZoneOffset.UTC).toInstant()).abs();
+        return transactionRepository.sumAmountsByUserIdAndTypeAndDate(userId, TransactionTypeEnum.EXPENSE, fromDate.atStartOfDay(ZoneOffset.UTC).toInstant(), toDate.atTime(LocalTime.MAX).atZone(ZoneOffset.UTC).toInstant()).abs();
     }
 
     public List<PortfolioTypeSummary> getBalanceByPortfolioType(UUID userId) {
