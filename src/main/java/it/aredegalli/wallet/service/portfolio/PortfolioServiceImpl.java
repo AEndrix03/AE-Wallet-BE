@@ -59,7 +59,11 @@ public class PortfolioServiceImpl implements PortfolioService {
     @Override
     public Optional<PortfolioDto> getPortfolioById(UUID portfolioId) {
         return this.portfolioRepository.findById(portfolioId)
-                .map(portfolioMapper::toDto);
+                .map(p -> {
+                    PortfolioDto dto = portfolioMapper.toDto(p);
+                    dto.setBalance(this.transactionRepository.sumAmountsByPortfolioId(p.getId()));
+                    return dto;
+                });
     }
 
     @Override

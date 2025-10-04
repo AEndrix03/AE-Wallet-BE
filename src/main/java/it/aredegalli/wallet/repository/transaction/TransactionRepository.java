@@ -27,8 +27,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID>,
     @Query("SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t " +
             "WHERE t.portfolio.userId = :userId " +
             "AND t.type = :type " +
-            "AND t.creationDate >= :fromDate " +
-            "AND t.creationDate <= :toDate")
+            "AND t.transactionDate >= :fromDate " +
+            "AND t.transactionDate <= :toDate")
     BigDecimal sumAmountsByUserIdAndTypeAndDate(
             @Param("userId") UUID userId,
             @Param("type") TransactionTypeEnum type,

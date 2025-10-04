@@ -17,7 +17,7 @@ public class TransactionMapper implements IDtoMapper<TransactionDto, Transaction
                 .amount(entity.getAmount() != null ? entity.getAmount().doubleValue() : null)
                 .currency(entity.getCurrency())
                 .type(entity.getType())
-                .date(entity.getCreationDate() != null ? entity.getCreationDate().atZone(java
+                .date(entity.getTransactionDate() != null ? entity.getTransactionDate().atZone(java
                                 .time
                                 .ZoneId
                                 .systemDefault())
@@ -37,7 +37,7 @@ public class TransactionMapper implements IDtoMapper<TransactionDto, Transaction
                 .amount(dto.getAmount() != null ? java.math.BigDecimal.valueOf(dto.getAmount()) : null)
                 .currency(dto.getCurrency())
                 .type(dto.getType())
-                .creationDate(dto.getDate() != null ? dto.getDate().atZone(java.time.ZoneId.systemDefault()).toInstant() : null)
+                .transactionDate(dto.getDate() != null ? dto.getDate().atZone(java.time.ZoneId.systemDefault()).toInstant() : null)
                 .portfolio(dto.getPortfolioId() != null ? it.aredegalli.wallet.entity.portfolio.Portfolio.builder().id(dto.getPortfolioId()).build() : null)
                 .note(dto.getNote())
                 .build();

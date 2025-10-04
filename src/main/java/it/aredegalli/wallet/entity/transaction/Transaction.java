@@ -48,6 +48,9 @@ public class Transaction {
     @JoinColumn(name = "portfolio", nullable = false)
     private Portfolio portfolio;
 
+    @Column(name = "transaction_date", nullable = false)
+    private Instant transactionDate;
+
     @ColumnDefault("now()")
     @Column(name = "creation_date", nullable = false)
     private Instant creationDate;
